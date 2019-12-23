@@ -35,7 +35,9 @@
 #include "KeyFrameDatabase.h"
 #include "ORBVocabulary.h"
 #include "Viewer.h"
+
 #include <unistd.h>
+
 namespace ORB_SLAM2
 {
 
@@ -129,9 +131,10 @@ private:
 
     // ORB vocabulary used for place recognition and feature matching.
     ORBVocabulary* mpVocabulary;
-    //=======================================//
-    RFNETVocabulary* mpVocabularyRFNet;
-    //=======================================//
+
+    //DLF
+    DLFVocabulary* mpVocabularyDLF;
+
 
     // KeyFrame database for place recognition (relocalization and loop detection).
     KeyFrameDatabase* mpKeyFrameDatabase;

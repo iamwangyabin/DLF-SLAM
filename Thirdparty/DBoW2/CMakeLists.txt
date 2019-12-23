@@ -5,36 +5,39 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}  -Wall  -O3 -march=native ")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall  -O3 -march=native")
 
 set(HDRS_DBOW2
-  DBoW2/BowVector.h
-  DBoW2/FORB.h
-  DBoW2/FRFNET.h
-  DBoW2/FLFNET.h
-  DBoW2/FClass.h       
-  DBoW2/FeatureVector.h
-  DBoW2/ScoringObject.h   
-  DBoW2/TemplatedVocabulary.h)
+        DBoW2/BowVector.h
+        DBoW2/FORB.h
+        DBoW2/FLFNET.h
+        DBoW2/FDLF.h
+        DBoW2/FClass.h
+        DBoW2/FeatureVector.h
+        DBoW2/ScoringObject.h
+        DBoW2/TemplatedVocabulary.h)
+
 set(SRCS_DBOW2
-  DBoW2/BowVector.cpp
-  DBoW2/FORB.cpp
-  DBoW2/FRFNET.cpp
-  DBoW2/FLFNET.cpp
-  DBoW2/FeatureVector.cpp
-  DBoW2/ScoringObject.cpp)
+        DBoW2/BowVector.cpp
+        DBoW2/FORB.cpp
+        DBoW2/FLFNET.cpp
+        DBoW2/FDLF.cpp
+        DBoW2/FeatureVector.cpp
+        DBoW2/ScoringObject.cpp)
 
 set(HDRS_DUTILS
-  DUtils/Random.h
-  DUtils/Timestamp.h)
+        DUtils/Random.h
+        DUtils/Timestamp.h)
 set(SRCS_DUTILS
-  DUtils/Random.cpp
-  DUtils/Timestamp.cpp)
+        DUtils/Random.cpp
+        DUtils/Timestamp.cpp)
 
+
+set(OpenCV_DIR /home/wang/workspace/VIO-SLAM/LIBRARY/opencv-3.2.0/build)
 find_package(OpenCV 3.0 QUIET)
-if(NOT OpenCV_FOUND)
-   find_package(OpenCV 2.4.3 QUIET)
-   if(NOT OpenCV_FOUND)
-      message(FATAL_ERROR "OpenCV > 2.4.3 not found.")
-   endif()
-endif()
+if (NOT OpenCV_FOUND)
+    find_package(OpenCV 2.4.3 QUIET)
+    if (NOT OpenCV_FOUND)
+        message(FATAL_ERROR "OpenCV > 2.4.3 not found.")
+    endif ()
+endif ()
 
 set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 

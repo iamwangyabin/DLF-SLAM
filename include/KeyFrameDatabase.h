@@ -32,49 +32,44 @@
 #include<mutex>
 
 
-namespace ORB_SLAM2
-{
+namespace ORB_SLAM2 {
 
-class KeyFrame;
-class Frame;
+    class KeyFrame;
+
+    class Frame;
 
 
-class KeyFrameDatabase
-{
-public:
+    class KeyFrameDatabase {
+    public:
 
-  KeyFrameDatabase(const ORBVocabulary &voc);
-  //============================================//
-  //zoe 20181016
-  KeyFrameDatabase(const RFNETVocabulary &vocrfnet);
-  //===========================================//
+        // DLF
+        KeyFrameDatabase(const DLFVocabulary &vocdlf);
 
-   void add(KeyFrame* pKF);
 
-   void erase(KeyFrame* pKF);
+        void add(KeyFrame *pKF);
 
-   void clear();
+        void erase(KeyFrame *pKF);
 
-   // Loop Detection
-   std::vector<KeyFrame *> DetectLoopCandidates(KeyFrame* pKF, float minScore);
+        void clear();
 
-   // Relocalization
-   std::vector<KeyFrame*> DetectRelocalizationCandidates(Frame* F);
+        // Loop Detection
+        std::vector<KeyFrame *> DetectLoopCandidates(KeyFrame *pKF, float minScore);
 
-protected:
+        // Relocalization
+        std::vector<KeyFrame *> DetectRelocalizationCandidates(Frame *F);
 
-  // Associated vocabulary
-  const ORBVocabulary* mpVoc;
-  //=============================================================//
-  //zoe 20181016
-  const RFNETVocabulary* mpVocRFNet;
-  //==============================================================//
-  // Inverted file
-  std::vector<list<KeyFrame*> > mvInvertedFile;
+    protected:
 
-  // Mutex
-  std::mutex mMutex;
-};
+        // Associated vocabulary
+        //DLF
+        const DLFVocabulary *mpVocDLF;
+
+        // Inverted file
+        std::vector<list<KeyFrame *> > mvInvertedFile;
+
+        // Mutex
+        std::mutex mMutex;
+    };
 
 } //namespace ORB_SLAM
 

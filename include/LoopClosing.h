@@ -52,10 +52,10 @@ public:
 public:
 
     LoopClosing(Map* pMap, KeyFrameDatabase* pDB, ORBVocabulary* pVoc,const bool bFixScale);
-    //==========================================================//
-    //zoe 20181016
-    LoopClosing(Map* pMap, KeyFrameDatabase* pDB, RFNETVocabulary* pVocRFNet,const bool bFixScale);
-    //==========================================================//
+
+    // DLF
+    LoopClosing(Map* pMap, KeyFrameDatabase* pDB, DLFVocabulary* pVocDLF,const bool bFixScale);
+
     void SetTracker(Tracking* pTracker);
 
     void SetLocalMapper(LocalMapping* pLocalMapper);
@@ -112,10 +112,9 @@ protected:
 
     KeyFrameDatabase* mpKeyFrameDB;
     ORBVocabulary* mpORBVocabulary;
-    //==========================================//
-    //zoe 20181016
-    RFNETVocabulary* mpRFNETVocabulary;
-    //==========================================//
+
+    // DLF
+    DLFVocabulary* mpDLFVocabulary;
 
     LocalMapping *mpLocalMapper;
 

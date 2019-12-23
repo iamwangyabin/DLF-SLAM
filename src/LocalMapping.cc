@@ -135,7 +135,10 @@ void LocalMapping::ProcessNewKeyFrame()
 
     // Compute Bags of Words structures
     //mpCurrentKeyFrame->ComputeBoW();//zoe 20182016
-    mpCurrentKeyFrame->ComputeBoWRFNet();
+    //mpCurrentKeyFrame->ComputeBoWLFNet();
+
+    //DLF
+    mpCurrentKeyFrame->ComputeBoWDLF();
 
     // Associate MapPoints to the new keyframe and update normal and descriptor
     const vector<MapPoint*> vpMapPointMatches = mpCurrentKeyFrame->GetMapPointMatches();
@@ -152,7 +155,7 @@ void LocalMapping::ProcessNewKeyFrame()
                     pMP->AddObservation(mpCurrentKeyFrame, i);
                     pMP->UpdateNormalAndDepth();
                     //pMP->ComputeDistinctiveDescriptors();//zoe 20181017
-                    pMP->ComputeDistinctiveDescriptorsRFNet();
+                    pMP->ComputeDistinctiveDescriptorsDLF();//DLF
                 }
                 else // this can only happen for new stereo points inserted by the Tracking
                 {
@@ -268,7 +271,7 @@ void LocalMapping::CreateNewMapPoints()
         // Search matches that fullfil epipolar constraint
         vector<pair<size_t,size_t> > vMatchedIndices;
         //matcher.SearchForTriangulation(mpCurrentKeyFrame,pKF2,F12,vMatchedIndices,false);//zoe 20181017
-        matcher.SearchForTriangulationRFNet(mpCurrentKeyFrame,pKF2,F12,vMatchedIndices,false);
+        matcher.SearchForTriangulationDLF(mpCurrentKeyFrame,pKF2,F12,vMatchedIndices,false);
 
         cv::Mat Rcw2 = pKF2->GetRotation();
         cv::Mat Rwc2 = Rcw2.t();
@@ -345,12 +348,12 @@ void LocalMapping::CreateNewMapPoints()
             else if(bStereo1 && cosParallaxStereo1<cosParallaxStereo2)
             {
                 //x3D = mpCurrentKeyFrame->UnprojectStereo(idx1);
-                x3D = mpCurrentKeyFrame->UnprojectStereoRFNet(idx1);// zoe 20181016
+                x3D = mpCurrentKeyFrame->UnprojectStereoDLF(idx1);// zoe 20181016
             }
             else if(bStereo2 && cosParallaxStereo2<cosParallaxStereo1)
             {
                 //x3D = pKF2->UnprojectStereo(idx2);//zoe 20181016
-                x3D = pKF2->UnprojectStereoRFNet(idx2);
+                x3D = pKF2->UnprojectStereoDLF(idx2);
             }
             else
                 continue; //No stereo and very low parallax
@@ -447,7 +450,7 @@ void LocalMapping::CreateNewMapPoints()
             pKF2->AddMapPoint(pMP,idx2);
 
             //pMP->ComputeDistinctiveDescriptors();//zoe 20181017
-            pMP->ComputeDistinctiveDescriptorsRFNet();
+            pMP->ComputeDistinctiveDescriptorsDLF();
 
             pMP->UpdateNormalAndDepth();
 
@@ -495,7 +498,7 @@ void LocalMapping::SearchInNeighbors()
         KeyFrame* pKFi = *vit;
 
         //matcher.Fuse(pKFi,vpMapPointMatches);//zoe 20181017
-        matcher.FuseRFNet(pKFi,vpMapPointMatches);
+        matcher.FuseDLF(pKFi,vpMapPointMatches);
     }
 
     // Search matches by projection from target KFs in current KF
@@ -521,7 +524,7 @@ void LocalMapping::SearchInNeighbors()
     }
 
     //matcher.Fuse(mpCurrentKeyFrame,vpFuseCandidates);//zoe 20181017
-    matcher.FuseRFNet(mpCurrentKeyFrame,vpFuseCandidates);
+    matcher.FuseDLF(mpCurrentKeyFrame,vpFuseCandidates);
 
 
     // Update points
@@ -534,7 +537,7 @@ void LocalMapping::SearchInNeighbors()
             if(!pMP->isBad())
             {
                 //pMP->ComputeDistinctiveDescriptors();//zoe 20181017
-                pMP->ComputeDistinctiveDescriptorsRFNet();
+                pMP->ComputeDistinctiveDescriptorsDLF();
                 pMP->UpdateNormalAndDepth();
             }
         }

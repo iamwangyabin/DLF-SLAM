@@ -72,11 +72,10 @@ public:
 
     void ComputeDistinctiveDescriptors();
     cv::Mat GetDescriptor();
-    //==================================================//
-    //zoe 20181017
-    void ComputeDistinctiveDescriptorsRFNet();
-    std::vector<float> GetDescriptorRFNet();
-    //==================================================//
+
+    //DLF
+    void ComputeDistinctiveDescriptorsDLF();
+    std::vector<float> GetDescriptorDLF();
 
     void UpdateNormalAndDepth();
 
@@ -130,7 +129,7 @@ protected:
      // Best descriptor to fast matching
      cv::Mat mDescriptor;
      //===================================//
-     //zoe 20181016
+     //zoe 20181016 DLF
      std::vector<float> mvDspt; 
      //===================================//
 

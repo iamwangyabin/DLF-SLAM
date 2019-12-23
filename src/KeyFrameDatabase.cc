@@ -29,20 +29,13 @@ using namespace std;
 
 namespace ORB_SLAM2
 {
-//zoe 20181017 
-KeyFrameDatabase::KeyFrameDatabase (const ORBVocabulary &voc):
-    mpVoc(&voc)
-{
-    mvInvertedFile.resize(voc.size());
-}
 
-//zoe 20181016
-KeyFrameDatabase::KeyFrameDatabase (const RFNETVocabulary &vocrfnet):
-    mpVocRFNet(&vocrfnet)
+//DLF
+KeyFrameDatabase::KeyFrameDatabase (const DLFVocabulary &vocdlf):
+        mpVocDLF(&vocdlf)
 {
-    mvInvertedFile.resize(vocrfnet.size());// zoe 这里暂时还没有修改
+    mvInvertedFile.resize(vocdlf.size());
 }
-
 
 void KeyFrameDatabase::add(KeyFrame *pKF)
 {
@@ -76,7 +69,7 @@ void KeyFrameDatabase::erase(KeyFrame* pKF)
 void KeyFrameDatabase::clear()
 {
     mvInvertedFile.clear();
-    mvInvertedFile.resize(mpVocRFNet->size());//zoe 20181019
+    mvInvertedFile.resize(mpVocDLF->size());//zoe 20181019
 }
 
 
@@ -138,7 +131,7 @@ vector<KeyFrame*> KeyFrameDatabase::DetectLoopCandidates(KeyFrame* pKF, float mi
             nscores++;
 
             //float si = mpVoc->score(pKF->mBowVec,pKFi->mBowVec);
-            float si = mpVocRFNet->score(pKF->mBowVec,pKFi->mBowVec);//zoe 20181019
+            float si = mpVocDLF->score(pKF->mBowVec,pKFi->mBowVec);//zoe 20181019
 
             pKFi->mLoopScore = si;
             if(si>=minScore)
@@ -255,7 +248,7 @@ vector<KeyFrame*> KeyFrameDatabase::DetectRelocalizationCandidates(Frame *F)
         {
             nscores++;
             //float si = mpVoc->score(F->mBowVec,pKFi->mBowVec);//zoe 20181020
-            float si = mpVocRFNet->score(F->mBowVec,pKFi->mBowVec);
+            float si = mpVocDLF->score(F->mBowVec,pKFi->mBowVec);
             cout<<"data score = "<<si<<endl;
             pKFi->mRelocScore=si;
             lScoreAndMatch.push_back(make_pair(si,pKFi));
@@ -297,7 +290,7 @@ vector<KeyFrame*> KeyFrameDatabase::DetectRelocalizationCandidates(Frame *F)
     }
 
     // Return all those keyframes with a score higher than 0.75*bestScore
-    float minScoreToRetain = 0.75f*bestAccScore;//wang 0.75
+    float minScoreToRetain = 0.5f*bestAccScore;   /// DLF wang
     set<KeyFrame*> spAlreadyAddedKF;
     vector<KeyFrame*> vpRelocCandidates;
     vpRelocCandidates.reserve(lAccScoreAndMatch.size());

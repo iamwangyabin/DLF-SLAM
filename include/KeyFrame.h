@@ -93,11 +93,12 @@ public:
     // KeyPoint functions
     std::vector<size_t> GetFeaturesInArea(const float &x, const float  &y, const float  &r) const;
     cv::Mat UnprojectStereo(int i);
-    //===================================//
-    //zoe 20181016
-    cv::Mat UnprojectStereoRFNet(int i);
-    void ComputeBoWRFNet();
-    //====================================//
+
+    // DLF
+    cv::Mat UnprojectStereoDLF(int i);
+    void ComputeBoWDLF();
+
+
 
     // Image
     bool IsInImage(const float &x, const float &y) const;
@@ -168,7 +169,7 @@ public:
     const std::vector<cv::KeyPoint> mvKeys;
     const std::vector<cv::KeyPoint> mvKeysUn;
     //==========================================//
-    //zoe 20181016
+    //zoe 20181016 DLF
     const std::vector<cv::KeyPoint> mvKpts;
     const std::vector<cv::KeyPoint> mvKptsUn;
     const std::vector<std::vector<float>> mvDspts;
@@ -216,10 +217,9 @@ protected:
     // BoW
     KeyFrameDatabase* mpKeyFrameDB;
     ORBVocabulary* mpORBvocabulary;
-    //========================================================//
-    //zoe 20181016
-    RFNETVocabulary* mpRFNETvocabulary;
-    //========================================================//
+
+    // DLF
+    DLFVocabulary* mpDLFvocabulary;
 
     // Grid over the image to speed up feature matching
     std::vector< std::vector <std::vector<size_t> > > mGrid;

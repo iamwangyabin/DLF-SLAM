@@ -60,10 +60,21 @@ System::System(const string &strVocFile, const string &strSettingsFile, const eS
     //Load Vocabulary
     cout << endl << "Loading Vocabulary. This could take a while..." << endl;
 
-    //zoe 20181016
-    mpVocabularyRFNet = new RFNETVocabulary();
-    bool bVocLoadRFNet = mpVocabularyRFNet->loadFromTextFile(strVocFile);
-    if(!bVocLoadRFNet)
+//    zoe 20181016
+//    mpVocabularyLFNet = new LFNETVocabulary();
+//    bool bVocLoadLFNet = mpVocabularyLFNet->loadFromTextFile(strVocFile);
+//    if(!bVocLoadLFNet)
+//    {
+//        cerr << "Wrong path to vocabulary. " << endl;
+//        cerr << "Falied to open at: " << strVocFile << endl;
+//        exit(-1);
+//    }
+//    cout << "Vocabulary loaded!" << endl << endl;
+
+    // DLF
+    mpVocabularyDLF = new DLFVocabulary();
+    bool bVocLoadDLF = mpVocabularyDLF->loadFromTextFile(strVocFile);
+    if(!bVocLoadDLF)
     {
         cerr << "Wrong path to vocabulary. " << endl;
         cerr << "Falied to open at: " << strVocFile << endl;
@@ -72,7 +83,11 @@ System::System(const string &strVocFile, const string &strSettingsFile, const eS
     cout << "Vocabulary loaded!" << endl << endl;
 
     //Create KeyFrame Database
-    mpKeyFrameDatabase = new KeyFrameDatabase(*mpVocabularyRFNet);// zoe database名字没改
+//    mpKeyFrameDatabase = new KeyFrameDatabase(*mpVocabularyLFNet);// zoe database名字没改
+
+//DLF
+    mpKeyFrameDatabase = new KeyFrameDatabase(*mpVocabularyDLF);
+
     
     //Create the Map
     mpMap = new Map();
@@ -83,11 +98,18 @@ System::System(const string &strVocFile, const string &strSettingsFile, const eS
 
     //Initialize the Tracking thread
     //(it will live in the main thread of execution, the one that called this constructor)
+
     //========================================================//
     //zoe 20181016 track名字没改
-    mpTracker = new Tracking(this, mpVocabularyRFNet, mpFrameDrawer, mpMapDrawer,
-                             mpMap, mpKeyFrameDatabase, strSettingsFile, mSensor);
+//    mpTracker = new Tracking(this, mpVocabularyLFNet, mpFrameDrawer, mpMapDrawer,
+//                             mpMap, mpKeyFrameDatabase, strSettingsFile, mSensor);
     //========================================================//
+
+    mpTracker = new Tracking(this, mpVocabularyDLF, mpFrameDrawer, mpMapDrawer,
+                             mpMap, mpKeyFrameDatabase, strSettingsFile, mSensor);
+
+
+
     //Initialize the Local Mapping thread and launch
     mpLocalMapper = new LocalMapping(mpMap, mSensor==MONOCULAR);
     mptLocalMapping = new thread(&ORB_SLAM2::LocalMapping::Run,mpLocalMapper);
@@ -95,8 +117,12 @@ System::System(const string &strVocFile, const string &strSettingsFile, const eS
     //Initialize the Loop Closing thread and launch
     //=====================================================//
     // zoe 20181016
-    mpLoopCloser = new LoopClosing(mpMap, mpKeyFrameDatabase, mpVocabularyRFNet, mSensor!=MONOCULAR);
+//    mpLoopCloser = new LoopClosing(mpMap, mpKeyFrameDatabase, mpVocabularyLFNet, mSensor!=MONOCULAR);
     //======================================================//
+
+    //DLF
+    mpLoopCloser = new LoopClosing(mpMap, mpKeyFrameDatabase, mpVocabularyDLF, mSensor!=MONOCULAR);
+
     mptLoopClosing = new thread(&ORB_SLAM2::LoopClosing::Run, mpLoopCloser);
 
     //Initialize the Viewer thread and launch
@@ -218,7 +244,7 @@ cv::Mat System::TrackRGBD(const cv::Mat &im, const cv::Mat &depthmap, const doub
     unique_lock<mutex> lock2(mMutexState);
     mTrackingState = mpTracker->mState;
     mTrackedMapPoints = mpTracker->mCurrentFrame.mvpMapPoints;
-    //mTrackedKeyPointsUn = mpTracker->mCurrentFrame.mvKeysUn;// zoe mark
+//    mTrackedKeyPointsUn = mpTracker->mCurrentFrame.mvKeysUn;// zoe mark
     //zoe 20181016
     mTrackedKeyPointsUn = mpTracker->mCurrentFrame.mvKptsUn;
     
